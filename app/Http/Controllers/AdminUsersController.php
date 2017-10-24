@@ -12,6 +12,7 @@ use App\Http\Requests\UsersRequest;
 // Models
 use App\User;
 use App\Role;
+use App\Photo;
 
 class AdminUsersController extends Controller
 {
@@ -53,14 +54,42 @@ class AdminUsersController extends Controller
      */
     public function store(UsersRequest $request)
     {
+        // User input as variable
+        $input = $request->all();
+
+        // Check if user submitted a file - db users table column name
+        if($file = $request->file('photo_id')){
+            // Prepare photo name
+            $name = time()."_".$file->getClientOriginalName();
+            
+            // Move file to public/images folder
+            $file->move('images', $name);
+
+            // Insert photo to photo table - needs to be array - single value won't pass - as name was single variable not array - array needs to be added -  'file' = column name in photos table
+            $photo = Photo::create(['file'=>$name]);
+
+            // Prepare photo_id into input array - which we get automatically if we create a new photo record in photos table
+           $input['photo_id'] = $photo->id;           
+        }
+
+        // Encrypt password with hash -  from $request array password key
+        $input['password'] = bcrypt($request->password);
+
+        // Insert photo_id(if any) and every other user input in users table
+        // $input variable is already an array
+         User::create($input);
+
+        // Redirect to all users page - route which will redirect to AdminUsersController@index method
+        return redirect('/admin/users');    
+
+        // -------------------------
         // Create new user / persist data to database
         // uploaded file / image will not be included as 
         // when uploaded file submitted with post method it will be empty
-
-        User::create($request->all());
+        // User::create($request->all());
         
         // Redirect to admin/users route
-        return redirect('/admin/users');
+        //return redirect('/admin/users');
     }
 
     /**

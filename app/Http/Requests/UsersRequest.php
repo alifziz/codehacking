@@ -26,11 +26,11 @@ class UsersRequest extends Request
     {
         return [
             //
-            'name' => 'required',
-            'email' => 'required',
+            'name' => 'required|max:100',
+            'email' => 'required|max:100',
             'is_active' => 'required',
             'role_id' => 'required',
-            'password' => 'required'
+            'password' => 'required|min:6'
         ];
     }
 }
