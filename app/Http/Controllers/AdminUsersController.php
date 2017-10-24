@@ -6,6 +6,13 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+// Request
+use App\Http\Requests\UsersRequest;
+
+// Models
+use App\User;
+use App\Role;
+
 class AdminUsersController extends Controller
 {
     /**
@@ -15,8 +22,11 @@ class AdminUsersController extends Controller
      */
     public function index()
     {
-        //
-        return view('admin.users.index');
+        // Get all users
+        $users = User::all();
+
+        // Pass data as variable in view file
+        return view('admin.users.index', compact('users'));
     }
 
     /**
@@ -26,8 +36,13 @@ class AdminUsersController extends Controller
      */
     public function create()
     {
-        //
-        return view('admin.users.create');
+        // Get all roles - lists() - returns result as array - but gotta use all() to get those value -- lists() - is deprecated - so use pluck()
+        // $roles = Role::lists('name', 'id')->all();
+
+        $roles = Role::pluck('name', 'id')->all();
+
+        // Pass value to db
+        return view('admin.users.create', compact('roles'));
     }
 
     /**
@@ -36,9 +51,16 @@ class AdminUsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UsersRequest $request)
     {
-        //
+        // Create new user / persist data to database
+        // uploaded file / image will not be included as 
+        // when uploaded file submitted with post method it will be empty
+
+        User::create($request->all());
+        
+        // Redirect to admin/users route
+        return redirect('/admin/users');
     }
 
     /**
