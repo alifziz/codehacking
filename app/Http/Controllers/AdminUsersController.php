@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-// Request
+// Requesta
 use App\Http\Requests\UsersRequest;
+use App\Http\Requests\UsersEditRequest;
 
 // Models
 use App\User;
@@ -54,8 +55,16 @@ class AdminUsersController extends Controller
      */
     public function store(UsersRequest $request)
     {
-        // User input as variable
-        $input = $request->all();
+        // Check if user submitted a password
+        if(trim($request->password) == ''){
+            // Get all values except password - except() laravel function
+            $input = $request->except('password');
+        }else{
+            $input = $request->all();
+            // Encrypt password
+            $input['password'] = bcrypt($request->password);
+        }
+
 
         // Check if user submitted a file - db users table column name
         if($file = $request->file('photo_id')){
@@ -111,8 +120,14 @@ class AdminUsersController extends Controller
      */
     public function edit($id)
     {
-        //
-        return view('admin.users.edit');
+        // Find user
+        $user = User::findOrFail($id);
+
+        // Get all roles - lists() - returns result as array - but gotta use all() to get those value -- lists() - is deprecated - so use pluck()
+        $roles = Role::pluck('name', 'id')->all();
+
+        // Pass value to view
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -122,9 +137,40 @@ class AdminUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UsersEditRequest $request, $id)
     {
-        //
+        // Get user
+        $user = User::findOrFail($id);
+
+
+        // Check if user submitted a password
+        if(trim($request->password) == ''){
+            $input = $request->except('password');
+        }else{
+            // Get all user input
+            $input = $request->all();
+            $input['password'] = bcrypt($request->password);
+        }
+       
+
+        // Check if new image was uploaded
+        if($file = $request->file('photo_id')){
+            $name = time()."_".$file->getClientOriginalName();
+
+            // Move image to images folder
+            $file->move('images', $name);
+
+            // Insert photo and get id
+            $photo = Photo::create(['file' => $name]);
+
+            $input['photo_id'] = $photo->id;
+        }
+
+        // Update
+        $user->update($input);
+
+        // Redirect - to all users page - route which will redirect to AdminUsersController@index method
+        return redirect('/admin/users');
     }
 
     /**

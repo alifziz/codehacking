@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Photo extends Model
 {
+	/**
+     * Directory name
+     *
+     * 
+     */
+	protected $uploads = '/images/';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -15,5 +22,14 @@ class Photo extends Model
         'file', 
     ];
 
+
+    /**
+     * Create accessor with photos table column name file
+     *
+     * @var array
+     */
+    public function getFileAttribute($value){	
+    	return $this->uploads.$value;
+    }
     
 }
