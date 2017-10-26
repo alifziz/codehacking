@@ -45,6 +45,17 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * Post relation
+     *
+     * 
+     */
+    public function posts(){
+        return $this->hasMany('App\Post');
+    }
+
+
+
      /**
      * Check if logged i user is admin
      *

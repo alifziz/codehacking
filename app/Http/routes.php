@@ -33,6 +33,9 @@ Route::get('/admin', function(){
 
 Route::group(['middleware'=> 'admin'], function(){
 	Route::resource('/admin/users', 'AdminUsersController');
+
+	// Posts are available for admin users  - for now
+	Route::resource('/admin/posts', 'AdminPostsController');
 });
 
 /*Route::get('/role',function(){

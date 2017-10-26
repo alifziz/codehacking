@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-// Requesta
+// Requests
 use App\Http\Requests\UsersRequest;
 use App\Http\Requests\UsersEditRequest;
 
