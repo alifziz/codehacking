@@ -25,10 +25,10 @@ class AuthController extends Controller
 
     /**
      * Where to redirect users after login / registration.
-     *
+     * / means goes to root or home
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/admin';
 
     /**
      * Create a new authentication controller instance.

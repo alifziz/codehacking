@@ -15,6 +15,9 @@ use App\User;
 use App\Role;
 use App\Photo;
 
+// Session facade
+use Illuminate\Support\Facades\Session;
+
 class AdminUsersController extends Controller
 {
     /**
@@ -86,7 +89,11 @@ class AdminUsersController extends Controller
 
         // Insert photo_id(if any) and every other user input in users table
         // $input variable is already an array
-         User::create($input);
+        User::create($input);
+
+        // Flash message - session
+        Session::flash('created_user','User Created'); 
+
 
         // Redirect to all users page - route which will redirect to AdminUsersController@index method
         return redirect('/admin/users');    
@@ -169,6 +176,11 @@ class AdminUsersController extends Controller
         // Update
         $user->update($input);
 
+
+        // Flash message - session
+        Session::flash('updated_user','User Info Updated');
+
+
         // Redirect - to all users page - route which will redirect to AdminUsersController@index method
         return redirect('/admin/users');
     }
@@ -181,6 +193,28 @@ class AdminUsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Delete user
+        $user = User::findOrFail($id);
+
+        // Get photo id
+        $photo_id = $user->photo_id;
+
+        // Remove image from public folder - photo() as dynamic property
+        if($photo_id != ''){
+            unlink(public_path().$user->photo->file);
+        }   
+
+        // Delete user
+        $user->delete();
+
+        // Delete photo from photos table
+        $photo = Photo::findOrFail($photo_id)->delete();
+
+        
+        // Flash message - session
+        Session::flash('deleted_user','User Deleted');
+
+        // Redirect to admin/users route
+        return redirect('/admin/users');
     }
 }

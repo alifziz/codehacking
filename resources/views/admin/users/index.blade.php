@@ -2,6 +2,25 @@
 
 
 @section('content')
+
+  @if(Session::has('created_user'))
+    <!-- session() global function -->
+    <p class="alert alert-success">{{session('created_user')}}</p>
+  @endif
+
+
+  @if(Session::has('updated_user'))
+    <!-- session() global function -->
+    <p class="alert alert-success">{{session('updated_user')}}</p>
+  @endif
+
+
+  @if(Session::has('deleted_user'))
+    <!-- session() global function -->
+    <p class="alert alert-danger">{{session('deleted_user')}}</p>
+  @endif
+
+
 	<h1>Users</h1>
 	
 	<table class="table table-striped">
