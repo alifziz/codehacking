@@ -13,11 +13,10 @@
 			{!! Form::text('title', null, ['class'=>'form-control']) !!}
 		</div>
 
-
 		<div class="form-group">
 			{!! Form::label('category_id', 'Category') !!}
 			<!-- name, <option value=1>Active</option>, selected/default value, extra attribute add -->
-			{!! Form::select('category_id', ['1'=>'PHP', '2'=>'JS'], null, ['class'=>'form-control']) !!}
+			{!! Form::select('category_id', [''=> 'Choose category']+ $categories, null, ['class'=>'form-control']) !!}
 		</div>
 
 
@@ -25,7 +24,6 @@
 			{!! Form::label('photo_id', 'Photo') !!}
 			{!! Form::file('photo_id', ['class'=>'form-control']) !!}
 		</div>
-
 
 
 		<div class="form-group">
@@ -36,8 +34,5 @@
 		{!! Form::submit('Create Post', ['class'=>'btn btn-primary'])!!}
 
 		{!! Form::close() !!}
-	</div>
-	
-	
-	
+	</div>	
 @endsection

@@ -30,10 +30,10 @@ class Post extends Model
      *
      * @var array
      */
-    /*public function category(){
+    public function category(){
     	return $this->belongsTo('App\Category');
     }
-*/
+
 
     /**
      * Relation with photo

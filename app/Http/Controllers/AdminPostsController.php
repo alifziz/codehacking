@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Post;
 use App\User;
 use App\Photo;
+use App\Category;
 
 
 class AdminPostsController extends Controller
@@ -41,10 +42,10 @@ class AdminPostsController extends Controller
      */
     public function create()
     {
-        // Get users
-        //$users = User::all();
-
-        return view('admin.posts.create');
+        // Get categories
+        $categories = Category::pluck('name', 'id')->all();
+    
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
